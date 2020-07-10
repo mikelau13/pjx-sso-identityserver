@@ -27,7 +27,7 @@ namespace IdentityServer
         public static IEnumerable<Client> Clients =>
             new List<Client>
             {
-                // machine to machine client (from quickstart 1, project Client)
+                // machine to machine client
                 new Client
                 {
                     ClientId = "client",
@@ -47,6 +47,7 @@ namespace IdentityServer
                 // interactive ASP.NET Core MVC client
                 new Client
                 {
+                    AllowOfflineAccess = true, // enable support for refresh tokens via the AllowOfflineAccess property
                     ClientId = "mvc",
                     ClientSecrets = { new Secret("secret".Sha256()) },
 
@@ -57,11 +58,50 @@ namespace IdentityServer
 
                     // where to redirect to after logout
                     PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
-
                     AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile
+                        IdentityServerConstants.StandardScopes.Profile,
+                        "api1" // add the api1 resource to the allowed scopes list
+                    }
+                },
+                // JavaScript Client
+                new Client
+                {
+                    ClientId = "js",
+                    ClientName = "JavaScript Client",
+                    AllowedGrantTypes = GrantTypes.Code,
+                    RequireClientSecret = false,
+
+                    RedirectUris =           { "https://localhost:5003/callback.html" },
+                    PostLogoutRedirectUris = { "https://localhost:5003/index.html" },
+                    AllowedCorsOrigins =     { "https://localhost:5003" },
+
+                    AllowedScopes =
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        "api1"
+                    }
+                },
+                // pjx-react web client
+                new Client
+                {
+                    ClientId = "pjx-react",
+                    ClientName = "pjx-react",
+                    ClientSecrets = { new Secret("secret".Sha256()) },
+                    AllowedGrantTypes = GrantTypes.Code,
+                    RequireClientSecret = false,
+                    RequirePkce = false,
+                    RedirectUris =           { "http://localhost:3000/callback" },
+                    PostLogoutRedirectUris = { "http://localhost:3000" },
+                    AllowedCorsOrigins =     { "http://localhost:3000" },
+
+                    AllowedScopes =
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        "api1"
                     }
                 }
             };
