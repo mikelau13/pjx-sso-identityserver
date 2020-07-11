@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using IdentityServer4;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -21,6 +22,16 @@ namespace IdentityServer
                 .AddInMemoryClients(Config.Clients);
 
             builder.AddDeveloperSigningCredential();
+
+            // uncomment when Google+ API is enabled and configured
+            //services.AddAuthentication()
+            //    .AddGoogle("Google", options =>
+            //    {
+            //        options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+
+            //        options.ClientId = "<insert here>";
+            //        options.ClientSecret = "<insert here>";
+            //    });
         }
 
         public void Configure(IApplicationBuilder app)
