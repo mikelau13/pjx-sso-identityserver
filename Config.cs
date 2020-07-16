@@ -84,16 +84,16 @@ namespace IdentityServer
                         "api1"
                     }
                 },
-                // pjx-react web client
+                // pjx-web-react web client
                 new Client
                 {
-                    ClientId = "pjx-react",
-                    ClientName = "pjx-react",
+                    ClientId = "pjx-web-react",
+                    ClientName = "pjx-web-react",
                     ClientSecrets = { new Secret("secret".Sha256()) },
                     AllowedGrantTypes = GrantTypes.Code,
                     RequireClientSecret = false,
                     RequirePkce = false,
-                    RedirectUris =           { "http://localhost:3000/callback" },
+                    RedirectUris =           { "http://localhost:3000/signin-oidc", "http://localhost:3000/dashboard"  },
                     PostLogoutRedirectUris = { "http://localhost:3000" },
                     AllowedCorsOrigins =     { "http://localhost:3000" },
 
