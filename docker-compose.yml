@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  pjx-sso-identityserver:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pjx-sso-identityserver-dev
+    ports:
+      - 5001:80
+    networks:
+      - pjx-network
+
+networks:
+  pjx-network:
+    name: pjx-network
+    driver: bridge
