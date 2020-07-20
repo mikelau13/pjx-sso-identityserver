@@ -350,6 +350,9 @@ MigrationBackup/
 .ionide/
 
 # At first startup, IdentityServer will create a developer signing key for 
-# you, you don’t have to check that file into your source control, it will 
+# you, you donï¿½t have to check that file into your source control, it will 
 # be re-created if it is not present.
 tempkey.jwk
+
+# The identity SqlLite database
+AspIdUsers.db
