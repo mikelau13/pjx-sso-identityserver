@@ -10,7 +10,7 @@ Open Project with file `IdentityServer.csproj` inside [Visual Studio 2019](https
 
 See how to install [.NET Core SDK and Runtime](https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu) 3.1 in Ubuntu.
 
-Uer SqlLite to open the database file `AspIdUsers.db`
+Uer [DB Browser for SQLite](https://sqlitebrowser.org/) to open the database file `AspIdUsers.db`
 
 
 ## To Open the Project
@@ -21,25 +21,29 @@ Or open folder in Visual Studio Code, install [extensions from marketplace](http
 
 ## To Launch
 
-Run this command line in terminal:
+To start the docker container:
+
+```bash
+docker-compose up
+```
+
+Or, run this command line in terminal:
 
 ```bash
 dotnet run
 ```
 
-Or click `Start Debugging` inside Visual Studio.
+Or open the project in Visual Studio 2019, click `Start Debugging`.
 
-After server started running, you can navigate to the discovery document - https://localhost:5001/.well-known/openid-configuration
+After server started running, you can navigate to the discovery document - http://localhost:5001/.well-known/openid-configuration
 
-The default OpenID Connect protocol MVC UI have been set up, you can navigate to the login page - https://localhost:5001/Account/Login
+The default OpenID Connect protocol MVC UI have been set up, you can navigate to the login page - http://localhost:5001/Account/Login
 
 To start, default users are being hardcoded in (TestUsers.cs)[~/Quickstart/TestUsers.cs]
 
 
 
 # TODO: 
-
-Add OpenID Connect client and OAuth client to consume this SSO server.
 
 Visit [Google Console](https://console.developers.google.com/), create a new project, enable the `Google+ API`, then `Create credentials`, `configure OAuth consent screen`, and configure the callback address, finally uncomment codes in Startup.cs
 
