@@ -4,13 +4,13 @@ Single Sign On using [IdentityServer4](https://identityserver4.readthedocs.io/)
 
 ## Prerequisites
 
-<<<<<<< HEAD
 The project is built with .NET Core SDK 3.1, here is how to [check if .NET Core is already installed](https://docs.microsoft.com/en-us/dotnet/core/install/how-to-detect-installed-versions?pivots=os-windows) or not.
-=======
+
 Open Project with file `IdentityServer.csproj` inside [Visual Studio 2019](https://visualstudio.microsoft.com/vs/older-downloads/)
->>>>>>> 39772cdab22e9957fe24d5e76c1ea4257c819f61
 
 See how to install [.NET Core SDK and Runtime](https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu) 3.1 in Ubuntu.
+
+Uer SqlLite to open the database file `AspIdUsers.db`
 
 
 ## To Open the Project
