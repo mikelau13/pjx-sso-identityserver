@@ -6,22 +6,22 @@ using IdentityServer4;
 using IdentityServer4.Models;
 using System.Collections.Generic;
 
-namespace IdentityServer
+namespace IdentityServerAspNetIdentity
 {
     public static class Config
     {
-        // Add support for the standard openid (subject id) and profile (then Register the identity resources)
         public static IEnumerable<IdentityResource> IdentityResources =>
-            new List<IdentityResource>
-            {
+                   new IdentityResource[]
+                   {
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
-            };
+                   };
 
         public static IEnumerable<ApiScope> ApiScopes =>
-            new List<ApiScope>
+            new ApiScope[]
             {
-                new ApiScope("api1", "My API")
+                new ApiScope("scope1"),
+                new ApiScope("scope2"),
             };
 
         public static IEnumerable<Client> Clients =>
