@@ -55,6 +55,13 @@ namespace IdentityServerAspNetIdentity
             // not recommended for production - you need to store your key material somewhere secure
             builder.AddDeveloperSigningCredential();
 
+            services.AddCors(options =>
+                    {
+                        options.AddPolicy("CorsPolicy",
+                            builder => builder.WithOrigins("http://localhost:3000")
+                            .AllowAnyMethod()
+                            .AllowAnyHeader());
+                    });
             // uncomment to enable Google+ API
             //services.AddAuthentication()
             //    .AddGoogle(options =>
@@ -78,7 +85,7 @@ namespace IdentityServerAspNetIdentity
             }
 
             app.UseStaticFiles();
-
+            app.UseCors("CorsPolicy");
             app.UseRouting();
             app.UseIdentityServer();
             app.UseAuthorization();
