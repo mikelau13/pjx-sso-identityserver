@@ -356,3 +356,5 @@ tempkey.jwk
 
 # The identity SqlLite database
 AspIdUsers.db
+AspIdUsers.db-shm
+AspIdUsers.db-wal
