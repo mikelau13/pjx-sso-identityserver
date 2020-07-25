@@ -5,6 +5,7 @@
 using IdentityServer4;
 using IdentityServerAspNetIdentity.Data;
 using IdentityServerAspNetIdentity.Models;
+using IdentityServerAspNetIdentity.Services.Email;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -55,18 +56,29 @@ namespace IdentityServerAspNetIdentity
             // not recommended for production - you need to store your key material somewhere secure
             builder.AddDeveloperSigningCredential();
 
+            services.AddCors(options =>
+                    {
+                        options.AddPolicy("CorsPolicy",
+                            builder => builder.WithOrigins("http://localhost:3000")
+                            .AllowAnyMethod()
+                            .AllowAnyHeader());
+                    });
             // uncomment to enable Google+ API
             //services.AddAuthentication()
             //    .AddGoogle(options =>
             //    {
             //        options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-                    
+
             //        // register your IdentityServer with Google at https://console.developers.google.com
             //        // enable the Google+ API
             //        // set the redirect URI to https://localhost:5001/signin-google
             //        options.ClientId = "copy client ID from Google here";
             //        options.ClientSecret = "copy client secret from Google here";
             //    });
+
+            // Email service
+            services.Configure<EmailConfig>(Configuration.GetSection("Email"));
+            services.AddTransient<IEmailService, EmailService>();
         }
 
         public void Configure(IApplicationBuilder app)
@@ -78,7 +90,7 @@ namespace IdentityServerAspNetIdentity
             }
 
             app.UseStaticFiles();
-
+            app.UseCors("CorsPolicy");
             app.UseRouting();
             app.UseIdentityServer();
             app.UseAuthorization();
