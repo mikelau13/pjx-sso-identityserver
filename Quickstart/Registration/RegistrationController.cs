@@ -8,6 +8,8 @@ using IdentityServerAspNetIdentity.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using IdentityServerHost.Quickstart.UI;
 using Microsoft.AspNetCore.Authentication;
@@ -15,6 +17,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using IdentityServerAspNetIdentity.Services.Email;
+using IdentityServerAspNetIdentity.Quickstart.Registration.EmailContent;
 
 namespace IdentityServerAspNetIdentity.Quickstart.Registration
 {
@@ -23,6 +27,7 @@ namespace IdentityServerAspNetIdentity.Quickstart.Registration
     public class RegistrationController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IEmailService _emailService;
         //private readonly SignInManager<ApplicationUser> _signInManager;
         //private readonly IIdentityServerInteractionService _interaction;
         //private readonly IClientStore _clientStore;
@@ -35,14 +40,52 @@ namespace IdentityServerAspNetIdentity.Quickstart.Registration
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IAuthenticationSchemeProvider schemeProvider,
-            IEventService events)
+            IEventService events,
+            IEmailService emailService)
         {
             _userManager = userManager;
+            _emailService = emailService;
             //_signInManager = signInManager;
             //_interaction = interaction;
             //_clientStore = clientStore;
             //_schemeProvider = schemeProvider;
             //_events = events;
+        }
+
+
+        [HttpGet]
+        [Route("api/validate")]
+        public async Task<IActionResult> ValidateEmail(string username, string activationCode)
+        {
+            if (!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(activationCode))
+            {
+                ApplicationUser user = await _userManager.FindByEmailAsync(username);
+
+                if (user != null && !user.EmailConfirmed && !string.IsNullOrWhiteSpace(user.ActivationCode))
+                {
+                    if (System.Web.HttpUtility.UrlDecode(user.ActivationCode) == activationCode.Trim())
+                    {
+                        user.EmailConfirmed = true;
+                        user.ActivationCode = null;
+
+                        await _userManager.UpdateAsync(user);
+
+                        return Ok();
+                    } 
+                    else
+                    {
+                        return BadRequest("Invalid validation code.");
+                    }
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                return BadRequest("Username and validation code are required.");
+            }
         }
 
         /// <summary>
@@ -68,16 +111,18 @@ namespace IdentityServerAspNetIdentity.Quickstart.Registration
 
             if (user != null && !user.EmailConfirmed)
             {
-                /*
                 // there might be a special case where some users have problem with the activation code so they would re-register
                 // for this reason, we better update the previous Activation Code
+                user.DisplayName = string.IsNullOrWhiteSpace(model.DisplayName) ? model.Email : model.DisplayName;
                 user.ActivationCode = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 await _userManager.UpdateAsync(user);
-                */
+
                 try
                 {
-                    // TODO: resend activation email
-                    //await SendActivationMailAsync(user, model.ActivationUrl);
+                    var (subject, body) = ActivationEmail.GenerateContent(_emailService.LocalDomain, user.DisplayName, user.Email, user.ActivationCode);
+                    // TODO: sending all email to myself for testing purpose, remove later
+                    _ = Task.Run(() => _emailService.SendEmailAsync("mikelau13@hotmail.com", subject, body));
+
                     return Ok();
                 }
                 catch (Exception)
@@ -89,7 +134,7 @@ namespace IdentityServerAspNetIdentity.Quickstart.Registration
             {
                 // first time registration
                 IdentityResult result;
-                CreateAccount(_userManager, model.Email, model.Password, out user, out result);
+                CreateAccount(_userManager, model.Email, model.Password, model.DisplayName, out user, out result);
 
                 if (!result.Succeeded)
                 {
@@ -98,12 +143,14 @@ namespace IdentityServerAspNetIdentity.Quickstart.Registration
                 }
 
                 // update activate code, code generated from using the user.Id so must first create user then update the record
-                // user.ActivationCode = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                user.ActivationCode = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 await _userManager.UpdateAsync(user);
 
                 try
                 {
-                    //await SendActivationMailAsync(user, model.ActivationUrl);
+                    var (subject, body) = ActivationEmail.GenerateContent(_emailService.LocalDomain, user.DisplayName, user.Email, user.ActivationCode);
+                    // TODO: sending all email to myself for testing purpose, remove later
+                    _ = Task.Run(() => _emailService.SendEmailAsync("mikelau13@hotmail.com", subject, body));
 
                     return Ok();
                 }
@@ -116,13 +163,14 @@ namespace IdentityServerAspNetIdentity.Quickstart.Registration
 
 
         internal static void CreateAccount(UserManager<ApplicationUser> userManager
-            , string email, string password
+            , string email, string password, string displayName
             , out ApplicationUser user, out IdentityResult result)
         {
             user = new ApplicationUser()
             {
                 UserName = email,
                 Email = email,
+                DisplayName = string.IsNullOrWhiteSpace(displayName) ? email : displayName,
                 LockoutEnabled = false,
             };
 

@@ -16,8 +16,8 @@ namespace IdentityServerAspNetIdentity.Quickstart.Registration
         //[Display(Name = "Last Name")]
         //public string LastName { get; set; }
 
-        //[StringLength(30)]
-        //public string DisplayName { get; set; }
+        [StringLength(30)]
+        public string DisplayName { get; set; }
 
         //[Range(1916, 2050)]
         //[Display(Name = "Year of Birth")]
