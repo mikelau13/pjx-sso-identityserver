@@ -9,6 +9,5 @@ namespace IdentityServerAspNetIdentity.Models
     public class ApplicationUser : IdentityUser
     {
         public string DisplayName { get; set; }
-        public string ActivationCode { get; set; }
     }
 }
