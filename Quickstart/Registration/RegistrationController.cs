@@ -61,17 +61,25 @@ namespace IdentityServerAspNetIdentity.Quickstart.Registration
             {
                 ApplicationUser user = await _userManager.FindByEmailAsync(username);
 
-                if (user != null && !user.EmailConfirmed && !string.IsNullOrWhiteSpace(user.ActivationCode))
+                if (user != null)
                 {
-                    if (System.Web.HttpUtility.UrlDecode(user.ActivationCode) == activationCode.Trim())
+                    if (!user.EmailConfirmed)
                     {
-                        user.EmailConfirmed = true;
-                        user.ActivationCode = null;
+                        IdentityResult result = _userManager.ConfirmEmailAsync(user, activationCode.Replace(" ", "+")).Result;
 
-                        await _userManager.UpdateAsync(user);
+                        if (result.Succeeded)
+                        {
+                            user.EmailConfirmed = true;
+         
+                            await _userManager.UpdateAsync(user);
 
-                        return Ok();
-                    } 
+                            return Ok();
+                        }
+                        else
+                        {
+                            return BadRequest("Invalid validation code.");
+                        }
+                    }
                     else
                     {
                         return BadRequest("Invalid validation code.");
@@ -114,12 +122,12 @@ namespace IdentityServerAspNetIdentity.Quickstart.Registration
                 // there might be a special case where some users have problem with the activation code so they would re-register
                 // for this reason, we better update the previous Activation Code
                 user.DisplayName = string.IsNullOrWhiteSpace(model.DisplayName) ? model.Email : model.DisplayName;
-                user.ActivationCode = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                string activationCode = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 await _userManager.UpdateAsync(user);
 
                 try
                 {
-                    var (subject, body) = ActivationEmail.GenerateContent(_emailService.LocalDomain, user.DisplayName, user.Email, user.ActivationCode);
+                    var (subject, body) = ActivationEmail.GenerateContent(_emailService.LocalDomain, user.DisplayName, user.Email, activationCode);
                     // TODO: sending all email to myself for testing purpose, remove later
                     _ = Task.Run(() => _emailService.SendEmailAsync("mikelau13@hotmail.com", subject, body));
 
@@ -143,12 +151,12 @@ namespace IdentityServerAspNetIdentity.Quickstart.Registration
                 }
 
                 // update activate code, code generated from using the user.Id so must first create user then update the record
-                user.ActivationCode = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                await _userManager.UpdateAsync(user);
+                string activationCode = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                //await _userManager.UpdateAsync(user);
 
                 try
                 {
-                    var (subject, body) = ActivationEmail.GenerateContent(_emailService.LocalDomain, user.DisplayName, user.Email, user.ActivationCode);
+                    var (subject, body) = ActivationEmail.GenerateContent(_emailService.LocalDomain, user.DisplayName, user.Email, activationCode);
                     // TODO: sending all email to myself for testing purpose, remove later
                     _ = Task.Run(() => _emailService.SendEmailAsync("mikelau13@hotmail.com", subject, body));
 

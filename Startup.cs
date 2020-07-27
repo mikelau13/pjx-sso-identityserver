@@ -3,6 +3,7 @@
 
 
 using IdentityServer4;
+using IdentityServer4.Configuration;
 using IdentityServerAspNetIdentity.Data;
 using IdentityServerAspNetIdentity.Models;
 using IdentityServerAspNetIdentity.Services.Email;
@@ -47,6 +48,11 @@ namespace IdentityServerAspNetIdentity
 
                 // see https://identityserver4.readthedocs.io/en/latest/topics/resources.html
                 options.EmitStaticAudienceClaim = true;
+                options.Authentication = new AuthenticationOptions()
+                {
+                    CookieLifetime = System.TimeSpan.FromMinutes(5), // TODO: easier to do testing by setting timeout to 5 minutes, will need to change back to hours for production
+                    CookieSlidingExpiration = true
+                };
             })
                 .AddInMemoryIdentityResources(Config.IdentityResources)
                 .AddInMemoryApiScopes(Config.ApiScopes)
