@@ -6,6 +6,7 @@ using IdentityServer4;
 using IdentityServer4.Configuration;
 using IdentityServerAspNetIdentity.Data;
 using IdentityServerAspNetIdentity.Models;
+using IdentityServerAspNetIdentity.Services;
 using IdentityServerAspNetIdentity.Services.Email;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -81,6 +82,13 @@ namespace IdentityServerAspNetIdentity
             //        options.ClientId = "copy client ID from Google here";
             //        options.ClientSecret = "copy client secret from Google here";
             //    });
+
+            // Secrets manager
+            SecretsManager secrets = new SecretsManager
+            {
+                SmtpPassword = Configuration["Pjx:SmtpPassword"]
+            };
+            services.AddSingleton<SecretsManager>(secrets);
 
             // Email service
             services.Configure<EmailConfig>(Configuration.GetSection("Email"));
