@@ -32,7 +32,7 @@ namespace IdentityServerAspNetIdentity.Services.Email
         {
             try
             {
-                if (false && !string.IsNullOrWhiteSpace(this.SmtpPassword) && !this.SmtpPassword.Contains("********"))
+                if (!string.IsNullOrWhiteSpace(this.SmtpPassword) && !this.SmtpPassword.Contains("********"))
                 {
                     using (var mail = new MailMessage())
                     {
