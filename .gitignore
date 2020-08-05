@@ -358,3 +358,5 @@ tempkey.jwk
 AspIdUsers.db
 AspIdUsers.db-shm
 AspIdUsers.db-wal
+
+.vscode/

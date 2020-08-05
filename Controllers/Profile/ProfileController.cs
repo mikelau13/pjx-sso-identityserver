@@ -41,11 +41,29 @@ namespace IdentityServerAspNetIdentity.Controllers.Profile
 
 
         /// <summary>
-        /// Handle postback from username/password login
+        /// Handle postback from /profile update
         /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(ProfileUpdateModel model, string button)
+        {
+            switch(button)
+            {
+                case "login": return await ProfileUpdate(model);
+                case "cancel": 
+                    if (string.IsNullOrEmpty(model.ReturnUrl))
+                    {
+                        return Redirect("~/");
+                    } 
+                    else 
+                    {
+                        return Redirect(model.ReturnUrl);
+                    }
+                default: return Index();                
+            }
+        }
+
+        private async Task<IActionResult> ProfileUpdate(ProfileUpdateModel model) 
         {
             ApplicationUser user = _userManager.FindByIdAsync(User.GetSubjectId()).Result;
 
@@ -53,7 +71,8 @@ namespace IdentityServerAspNetIdentity.Controllers.Profile
             {
                 DisplayName = user.DisplayName,
                 Email = user.Email,
-                IsUpdated = true
+                IsUpdated = true,
+                ReturnUrl =  model.ReturnUrl
             };
 
             if (ModelState.IsValid)

@@ -21,12 +21,13 @@ namespace IdentityServerAspNetIdentity
             new ApiScope[]
             {
                 new ApiScope("api1"),
+                new ApiScope("web_sso")
             };
 
         public static IEnumerable<Client> Clients =>
             new List<Client>
             {
-                // machine to machine client
+                // machine to machine client (testing in a private repository)
                 new Client
                 {
                     ClientId = "client",
@@ -43,7 +44,7 @@ namespace IdentityServerAspNetIdentity
                     // scopes that client has access to
                     AllowedScopes = { "api1" }
                 },
-                // interactive ASP.NET Core MVC client
+                // interactive ASP.NET Core MVC client (testing in a private repository)
                 new Client
                 {
                     AllowOfflineAccess = true, // enable support for refresh tokens via the AllowOfflineAccess property
@@ -64,7 +65,7 @@ namespace IdentityServerAspNetIdentity
                         "api1" // add the api1 resource to the allowed scopes list
                     }
                 },
-                // JavaScript Client
+                // JavaScript Client (testing in a private repository)
                 new Client
                 {
                     ClientId = "js",
@@ -83,7 +84,7 @@ namespace IdentityServerAspNetIdentity
                         "api1"
                     }
                 },
-                // pjx-web-react web client
+                // pjx-web-react web client, check https://github.com/mikelau13/pjx-web-react
                 new Client
                 {
                     ClientId = "pjx-web-react",
@@ -93,14 +94,14 @@ namespace IdentityServerAspNetIdentity
                     RequireClientSecret = false,
                     RequirePkce = false,
                     RedirectUris =           { "http://localhost:3000/signin-oidc", "http://localhost:3000/dashboard"  },
-                    PostLogoutRedirectUris = { "http://localhost:3000" },
+                    PostLogoutRedirectUris = { "http://localhost:3000", "http://localhost:3000/logout/callback" },
                     AllowedCorsOrigins =     { "http://localhost:3000" },
 
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        "api1"
+                        "web_sso"
                     }
                 }
             };
