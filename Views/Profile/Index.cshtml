@@ -16,6 +16,12 @@
                     <div class="alert alert-warning">
                         <strong>User profile have been updated successfully.</strong>
                     </div>
+                    @if (!string.IsNullOrWhiteSpace(Model.ReturnUrl))
+                    {
+                        <div>
+                            Click <a class="PostLogoutRedirectUri" href="@Model.ReturnUrl">here</a> to return to the application.
+                        </div>
+                    }
                 }
                 <div class="card-body">
                     <form asp-route="Profile">

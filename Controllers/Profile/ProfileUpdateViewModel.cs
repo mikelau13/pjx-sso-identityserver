@@ -10,5 +10,6 @@ namespace IdentityServerAspNetIdentity.Controllers.Profile
         public bool IsUpdated { get; set; }
         public string DisplayName { get; set; }
         public string Email { get; set; }
+        public string ReturnUrl { get;set; }
     }
 }
