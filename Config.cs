@@ -55,14 +55,14 @@ namespace IdentityServerAspNetIdentity
 
                     // where to redirect to after login
                     RedirectUris = { "https://localhost:5002/signin-oidc" },
-
+                    RequirePkce = false,
                     // where to redirect to after logout
                     PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
                     AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        "api1" // add the api1 resource to the allowed scopes list
+                        "web_sso"
                     }
                 },
                 // JavaScript Client (testing in a private repository)
@@ -72,7 +72,7 @@ namespace IdentityServerAspNetIdentity
                     ClientName = "JavaScript Client",
                     AllowedGrantTypes = GrantTypes.Code,
                     RequireClientSecret = false,
-
+                    RequirePkce = false,
                     RedirectUris =           { "https://localhost:5003/callback.html" },
                     PostLogoutRedirectUris = { "https://localhost:5003/index.html" },
                     AllowedCorsOrigins =     { "https://localhost:5003" },
@@ -81,7 +81,7 @@ namespace IdentityServerAspNetIdentity
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        "api1"
+                        "web_sso"
                     }
                 },
                 // pjx-web-react web client, check https://github.com/mikelau13/pjx-web-react
@@ -93,7 +93,7 @@ namespace IdentityServerAspNetIdentity
                     AllowedGrantTypes = GrantTypes.Code,
                     RequireClientSecret = false,
                     RequirePkce = false,
-                    RedirectUris =           { "http://localhost:3000/signin-oidc", "http://localhost:3000/dashboard"  },
+                    RedirectUris =           { "http://localhost:3000/signin-oidc", "http://localhost:3000/dashboard", "http://localhost:3000/callback"   },
                     PostLogoutRedirectUris = { "http://localhost:3000", "http://localhost:3000/logout/callback" },
                     AllowedCorsOrigins =     { "http://localhost:3000" },
 

@@ -19,4 +19,6 @@ RUN dotnet publish "IdentityServerAspNetIdentity.csproj" -c Release -o /app/publ
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+COPY pjx-sso-identityserver.cert_rsa512.pfx .
+COPY localhost.cert_rsa512.pfx .
 ENTRYPOINT ["dotnet", "IdentityServerAspNetIdentity.dll"]

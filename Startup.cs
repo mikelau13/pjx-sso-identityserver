@@ -60,8 +60,15 @@ namespace IdentityServerAspNetIdentity
                 .AddInMemoryClients(Config.Clients)
                 .AddAspNetIdentity<ApplicationUser>();
 
-            // not recommended for production - you need to store your key material somewhere secure
-            builder.AddDeveloperSigningCredential();
+            //// not recommended for production - you need to store your key material somewhere secure
+            // builder.AddDeveloperSigningCredential();
+
+            // self-signed certificate generate with https://github.com/mikelau13/pjx-api-dotnet/tree/master/src/Pjx_CreateCretificates
+            // test it using jwts endpoint /.well-known/openid-configuration/jwks
+            IConfigurationRoot configurationRoot = new ConfigurationBuilder().AddEnvironmentVariables("PJX_").Build();
+            IConfigurationSection section = configurationRoot.GetSection("SSO"); 
+            var rsaCertificate = new System.Security.Cryptography.X509Certificates.X509Certificate2(System.IO.Path.Combine(Environment.ContentRootPath, section["CERTIFICATE"] ?? "localhost.cert_rsa512.pfx"), "password");
+            builder.AddSigningCredential(rsaCertificate);
 
             services.AddCors(options =>
                     {
