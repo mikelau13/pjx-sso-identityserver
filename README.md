@@ -48,3 +48,5 @@ To start, default users are being hardcoded in (TestUsers.cs)[~/Quickstart/TestU
 Visit [Google Console](https://console.developers.google.com/), create a new project, enable the `Google+ API`, then `Create credentials`, `configure OAuth consent screen`, and configure the callback address, finally uncomment codes in Startup.cs
 
 Store the client and secret into key vault.
+
+Set up `hosts` file for `pjx-sso-identityyserver`, now there is a known issue that the identity server have a different domain for the web client and for the web api, this is causing issue when setting up SSL.
