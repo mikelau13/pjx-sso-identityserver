@@ -67,7 +67,7 @@ namespace IdentityServerAspNetIdentity
             // test it using jwts endpoint /.well-known/openid-configuration/jwks
             IConfigurationRoot configurationRoot = new ConfigurationBuilder().AddEnvironmentVariables("PJX_").Build();
             IConfigurationSection section = configurationRoot.GetSection("SSO"); 
-            var rsaCertificate = new System.Security.Cryptography.X509Certificates.X509Certificate2(System.IO.Path.Combine(Environment.ContentRootPath, section["CERTIFICATE"] ?? "localhost.cert_rsa512.pfx"), "password");
+            var rsaCertificate = new System.Security.Cryptography.X509Certificates.X509Certificate2(System.IO.Path.Combine(Environment.ContentRootPath, section["CERTIFICATE"] ?? "pjx-sso-identityserver.rsa_2048.cert.pfx"), "password");
             builder.AddSigningCredential(rsaCertificate);
 
             services.AddCors(options =>
