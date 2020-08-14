@@ -30,13 +30,13 @@ First of all, need to configure the `hosts` file to map `127.0.0.1` with `pjx-ss
 
 Usually you can edit the `hosts` file with `sudo nano /etc/hosts` on Linux, or the file is located at `C:\Windows\System32\Drivers\etc\hosts` for Windows.
 
-To start the docker container:
+To start the docker container (app will run at https://pjx-sso-identityserver):
 
 ```bash
 docker-compose up
 ```
 
-Or, run this command line in terminal:
+Or, run this command line in terminal  (app will run at http://localhost:5001):
 
 ```bash
 dotnet run
@@ -53,6 +53,11 @@ Then you can navigate to the discovery document - https://pjx-sso-identityserver
 The default OpenID Connect protocol MVC UI have been set up, you can navigate to the login page - https://pjx-sso-identityserver:5002/Account/Login
 
 To register a new user, you will need to visit the `/register` page in the [pjx-web-react](https://github.com/mikelau13/pjx-web-react) web client.
+
+
+## Swagger
+
+Path `/swagger`
 
 
 # TODO: 

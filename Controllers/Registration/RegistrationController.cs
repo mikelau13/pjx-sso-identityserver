@@ -53,6 +53,13 @@ namespace IdentityServerAspNetIdentity.Controllers.Registration
         }
 
 
+        /// <summary>
+        /// Validate activation code to activate account.  Activation code can be used for one time only.
+        /// </summary>
+        /// <param name="username">Username of the account to validate</param>
+        /// <param name="activationCode">Activation code</param>
+        /// <returns>200 if succeed; otherwise return a bad request with error message.</returns>
+        /// <seealso cref="HttpGetAttribute"/>
         [HttpGet]
         [Route("api/validate")]
         public async Task<IActionResult> ValidateEmail(string username, string activationCode)
@@ -108,8 +115,6 @@ namespace IdentityServerAspNetIdentity.Controllers.Registration
         [Route("api/register")]
         public async Task<IActionResult> Register(RegisterBindingModel model)
         {
-            //System.Diagnostics.Stopwatch swatch = new System.Diagnostics.Stopwatch(); swatch.Start();
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
