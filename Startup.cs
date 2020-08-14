@@ -32,6 +32,21 @@ namespace IdentityServerAspNetIdentity
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddSwaggerDocument(config =>
+            {
+                config.PostProcess = document =>
+                {
+                    document.Info.Version = "v1";
+                    document.Info.Title = "pjx-sso-identityserver";
+                    document.Info.Description = "IdentityServer4 for pjx project by mikelau13";
+                    document.Info.Contact = new NSwag.OpenApiContact
+                    {
+                        Name = "Mike Lau",
+                        Email = string.Empty,
+                        Url = "https://github.com/mikelau13"
+                    };
+                };
+            });
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
@@ -111,6 +126,9 @@ namespace IdentityServerAspNetIdentity
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
             }
+
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
 
             app.UseStaticFiles();
             app.UseCors("CorsPolicy");
